@@ -70,3 +70,8 @@ so it is drawn for contrast and labelled as not deployed.
 
 Architecture documentation compiled from public on-chain deployments and the protocol's own
 repository. Not an audit report, and it contains no security findings.
+
+## Diagram sources
+
+The eight diagrams are also available as standalone SVG files under [`svg/`](svg/) — self-contained,
+not referenced by the page, provided for editing or embedding in reports. See [`svg/README.md`](svg/README.md).
