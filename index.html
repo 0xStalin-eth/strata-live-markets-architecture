@@ -1,0 +1,889 @@
+<title>Strata Market Schematics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+
+<style>
+:root {
+  --ground: #E9ECF1;
+  --surface: #FFFFFF;
+  --surface-2: #F3F5F8;
+  --ink: #14171F;
+  --ink-2: #3D4552;
+  --muted: #667180;
+  --rule: #CFD5DE;
+  --rule-soft: #E1E6ED;
+  --jr: #A9571A;
+  --sr: #0F6959;
+  --core: #3A41A0;
+  --ext: #8A3F63;
+  --cool: #1F6390;
+  --jr-wash: #F6ECE2;
+  --sr-wash: #E5F1EE;
+  --core-wash: #E9EAF6;
+  --ext-wash: #F6E9EF;
+  --cool-wash: #E4EFF6;
+  --shadow: 0 1px 2px rgba(20, 23, 31, .06), 0 8px 24px -16px rgba(20, 23, 31, .25);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #101319; --surface: #181C24; --surface-2: #1F242E;
+    --ink: #E6EAF1; --ink-2: #B6BFCD; --muted: #8391A3;
+    --rule: #2E3541; --rule-soft: #242A34;
+    --jr: #E3A063; --sr: #4FC5AC; --core: #949AF0; --ext: #DC92B4; --cool: #66B4DE;
+    --jr-wash: #2A2119; --sr-wash: #162A27; --core-wash: #1E2036; --ext-wash: #2A1B23; --cool-wash: #15242E;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 28px -18px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"] {
+  --ground: #101319; --surface: #181C24; --surface-2: #1F242E;
+  --ink: #E6EAF1; --ink-2: #B6BFCD; --muted: #8391A3;
+  --rule: #2E3541; --rule-soft: #242A34;
+  --jr: #E3A063; --sr: #4FC5AC; --core: #949AF0; --ext: #DC92B4; --cool: #66B4DE;
+  --jr-wash: #2A2119; --sr-wash: #162A27; --core-wash: #1E2036; --ext-wash: #2A1B23; --cool-wash: #15242E;
+  --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 28px -18px rgba(0,0,0,.8);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+.defs-holder { position: absolute; width: 0; height: 0; overflow: hidden; }
+
+.page { max-width: 1080px; margin: 0 auto; padding: 56px 28px 96px; display: flex; flex-direction: column; gap: 48px; }
+
+h1, h2, h3 { font-family: Archivo, ui-sans-serif, system-ui, sans-serif; margin: 0; text-wrap: balance; letter-spacing: -0.02em; }
+h1 { font-size: clamp(32px, 5vw, 48px); font-weight: 800; line-height: 1.03; }
+h2 { font-size: clamp(21px, 3vw, 27px); font-weight: 700; line-height: 1.15; }
+h3 { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; }
+p { margin: 0; }
+
+.eyebrow { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 11px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+code, .mono { font-family: "IBM Plex Mono", ui-monospace, monospace; }
+code { font-size: .88em; background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 3px; padding: 1px 5px; color: var(--ink); }
+.lede { font-size: 17px; color: var(--ink-2); max-width: 68ch; }
+.note { font-size: 14px; color: var(--muted); max-width: 76ch; }
+
+header { display: flex; flex-direction: column; gap: 16px; }
+
+.verdict {
+  border: 1px solid var(--rule); border-left: 3px solid var(--sr);
+  background: var(--surface); border-radius: 4px; padding: 16px 20px;
+  display: flex; flex-direction: column; gap: 6px; box-shadow: var(--shadow);
+}
+.verdict p { font-size: 14px; color: var(--ink-2); }
+
+.legend {
+  border: 1px solid var(--rule); border-left: 3px solid var(--cool);
+  background: var(--surface); border-radius: 4px; padding: 16px 20px;
+  display: flex; flex-direction: column; gap: 8px; box-shadow: var(--shadow);
+}
+.legend h3 { color: var(--ink); }
+.legend dl { margin: 0; display: grid; grid-template-columns: 150px 1fr; gap: 6px 16px; font-size: 13.5px; }
+.legend dt { font-family: "IBM Plex Mono", monospace; font-size: 11.5px; color: var(--cool); padding-top: 2px; }
+.legend dd { margin: 0; color: var(--ink-2); }
+
+.market { display: flex; flex-direction: column; gap: 12px; }
+.m-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; border-top: 2px solid var(--ink); padding-top: 12px; }
+.m-name { font-family: Archivo, sans-serif; font-size: 26px; font-weight: 800; letter-spacing: -0.02em; }
+.m-sub { font-size: 14px; color: var(--muted); }
+.badges { display: flex; gap: 6px; flex-wrap: wrap; margin-left: auto; }
+.badge {
+  font-family: "IBM Plex Mono", monospace; font-size: 10px; letter-spacing: .06em; text-transform: uppercase;
+  padding: 3px 8px; border-radius: 3px; border: 1px solid currentColor; white-space: nowrap;
+}
+.badge.cont { color: var(--sr); }
+.badge.disc { color: var(--core); }
+.badge.dys  { color: var(--jr); }
+.badge.topo { color: var(--muted); }
+.badge.cool { color: var(--cool); }
+
+figure { margin: 0; background: var(--surface); border: 1px solid var(--rule); border-radius: 5px; box-shadow: var(--shadow); overflow: hidden; }
+.figscroll { overflow-x: auto; padding: 16px 16px 2px; }
+figure svg.dia { display: block; width: 100%; min-width: 700px; height: auto; }
+figcaption { font-size: 13px; color: var(--muted); padding: 11px 20px 15px; border-top: 1px solid var(--rule-soft); margin-top: 10px; }
+figcaption b { color: var(--ink-2); font-weight: 600; }
+
+/* diagram classes */
+rect.dg-box { fill: var(--surface-2); stroke: var(--rule); stroke-width: 1.2; }
+rect.dg-core { fill: var(--core-wash); stroke: var(--core); stroke-width: 1.4; }
+rect.dg-jr { fill: var(--jr-wash); stroke: var(--jr); stroke-width: 1.4; }
+rect.dg-sr { fill: var(--sr-wash); stroke: var(--sr); stroke-width: 1.4; }
+rect.dg-ext { fill: var(--ext-wash); stroke: var(--ext); stroke-width: 1.4; }
+rect.dg-cool { fill: var(--cool-wash); stroke: var(--cool); stroke-width: 1.4; }
+rect.dg-dash { fill: none; stroke: var(--rule); stroke-width: 1.2; stroke-dasharray: 3 3; }
+rect.dg-coolgroup { fill: none; stroke: var(--cool); stroke-width: 1.1; stroke-dasharray: 4 3; }
+.dg-t { font-family: Archivo, sans-serif; font-size: 13px; font-weight: 600; fill: var(--ink); }
+.dg-s { font-family: "IBM Plex Mono", monospace; font-size: 10px; fill: var(--muted); }
+.dg-glb { font-family: "IBM Plex Mono", monospace; font-size: 9.5px; letter-spacing: .12em; fill: var(--muted); }
+.dg-cglb { font-family: "IBM Plex Mono", monospace; font-size: 9.5px; letter-spacing: .12em; fill: var(--cool); }
+.dg-lb { font-family: "IBM Plex Mono", monospace; font-size: 10px; fill: var(--muted); }
+.dg-clb { font-family: "IBM Plex Mono", monospace; font-size: 10px; fill: var(--cool); }
+.dg-off { font-family: Archivo, sans-serif; font-size: 13px; font-weight: 600; fill: var(--muted); }
+.dg-edge { stroke: var(--ink-2); stroke-width: 1.3; fill: none; }
+.dg-edge-soft { stroke: var(--muted); stroke-width: 1.1; fill: none; stroke-dasharray: 4 3; }
+.dg-edge-jr { stroke: var(--jr); stroke-width: 1.4; fill: none; }
+.dg-edge-sr { stroke: var(--sr); stroke-width: 1.4; fill: none; }
+.dg-edge-ext { stroke: var(--ext); stroke-width: 1.3; fill: none; }
+.dg-edge-cool { stroke: var(--cool); stroke-width: 1.4; fill: none; }
+.dg-head { fill: var(--ink-2); }
+.dg-head-soft { fill: var(--muted); }
+.dg-head-jr { fill: var(--jr); }
+.dg-head-sr { fill: var(--sr); }
+.dg-head-ext { fill: var(--ext); }
+.dg-head-cool { fill: var(--cool); }
+
+.tablewrap { overflow-x: auto; border: 1px solid var(--rule); border-radius: 5px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; min-width: 720px; font-size: 13px; }
+th, td { text-align: left; padding: 9px 13px; border-bottom: 1px solid var(--rule-soft); vertical-align: top; }
+th { font-family: "IBM Plex Mono", monospace; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); font-weight: 500; background: var(--surface-2); white-space: nowrap; }
+tr:last-child td { border-bottom: none; }
+td.mono { font-family: "IBM Plex Mono", monospace; font-size: 11.5px; }
+td.yes { color: var(--cool); font-weight: 600; }
+td.no { color: var(--muted); }
+.addr { font-family: "IBM Plex Mono", monospace; font-size: 10px; color: var(--muted); font-weight: 400; }
+
+section { display: flex; flex-direction: column; gap: 16px; }
+.sec-head { display: flex; flex-direction: column; gap: 8px; border-top: 2px solid var(--ink); padding-top: 14px; }
+footer { border-top: 1px solid var(--rule); padding-top: 18px; font-size: 12.5px; color: var(--muted); display: flex; flex-direction: column; gap: 8px; }
+
+@media (max-width: 640px) {
+  .page { padding: 36px 16px 64px; gap: 38px; }
+  .badges { margin-left: 0; }
+  .legend dl { grid-template-columns: 1fr; gap: 2px 0; }
+  .legend dt { padding-top: 6px; }
+}
+</style>
+
+<svg class="defs-holder" aria-hidden="true" focusable="false">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <polygon class="dg-head" points="0,1 10,5 0,9"></polygon>
+    </marker>
+    <marker id="as" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <polygon class="dg-head-soft" points="0,1 10,5 0,9"></polygon>
+    </marker>
+    <marker id="aj" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <polygon class="dg-head-jr" points="0,1 10,5 0,9"></polygon>
+    </marker>
+    <marker id="at" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <polygon class="dg-head-sr" points="0,1 10,5 0,9"></polygon>
+    </marker>
+    <marker id="ax" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <polygon class="dg-head-ext" points="0,1 10,5 0,9"></polygon>
+    </marker>
+    <marker id="ac" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <polygon class="dg-head-cool" points="0,1 10,5 0,9"></polygon>
+    </marker>
+  </defs>
+</svg>
+
+<div class="page">
+
+<header>
+  <p class="eyebrow">Strata · commit 5f77ad4 · one schematic per deployed market</p>
+  <h1>Strata Market Schematics</h1>
+  <p class="lede">Seven mainnet markets at a glance. Same shape every time — two tranches into a CDO, a CDO into one strategy, a strategy into an external protocol — with the withdrawal cooldowns drawn in blue underneath so you can see at a glance which rails each market actually has.</p>
+  <div class="verdict">
+    <h3>None of the seven is multi-strategy</h3>
+    <p>Every live strategy inherits the single <code>Strategy</code> base and holds one external position. Across all deployment files on all five networks there are <b>8 CDOs and 8 strategy contracts</b> — a strict one-to-one. <code>MultiStrategy</code> and its only child <code>IsolatedStrategy</code> appear in no deployment file; that topology is drawn last, for contrast.</p>
+  </div>
+  <div class="legend">
+    <h3>The three cooldown rails</h3>
+    <dl>
+      <dt>SharesCooldown</dt><dd>Locks <b>vault shares</b> on redeem, with lock and fee tiers by coverage. Attached to the <b>CDO</b> via <code>setSharesCooldown()</code>.</dd>
+      <dt>ERC20Cooldown</dt><dd>Siloes the <b>payout token</b> for a per-tranche period, then releases it. Attached to the <b>strategy</b> at init.</dd>
+      <dt>UnstakeCooldown</dt><dd>Clones a <b>per-user request proxy</b> that queues in the external protocol. Attached to the strategy, and only live if a request implementation is registered for the token.</dd>
+    </dl>
+  </div>
+</header>
+
+<!-- ══════════════════ ETHENA ══════════════════ -->
+<div class="market">
+  <div class="m-head">
+    <span class="m-name">ethena</span>
+    <span class="m-sub">base USDe</span>
+    <span class="badges"><span class="badge topo">single strategy</span><span class="badge cool">2 of 3 rails</span><span class="badge cont">continuous</span></span>
+  </div>
+  <figure>
+    <div class="figscroll">
+      <svg class="dia" viewBox="0 0 940 356" role="img" aria-label="Ethena market: junior and senior USDe tranches feed the CDO, which invests through the sUSDe strategy into Ethena's sUSDe vault. The strategy is wired to an ERC20 cooldown and an unstake cooldown; no shares cooldown is deployed.">
+        <rect class="dg-dash" x="16" y="14" width="176" height="152" rx="4"></rect>
+        <text class="dg-glb" x="28" y="32">TRANCHES</text>
+        <rect class="dg-jr" x="30" y="42" width="148" height="48" rx="3"></rect>
+        <text class="dg-t" x="44" y="62">jrUSDe</text>
+        <text class="dg-s" x="44" y="78">junior</text>
+        <rect class="dg-sr" x="30" y="102" width="148" height="48" rx="3"></rect>
+        <text class="dg-t" x="44" y="122">srUSDe</text>
+        <text class="dg-s" x="44" y="138">senior</text>
+
+        <path class="dg-edge-jr" d="M178 66 L268 76" marker-end="url(#aj)"></path>
+        <path class="dg-edge-sr" d="M178 126 L268 102" marker-end="url(#at)"></path>
+
+        <rect class="dg-core" x="268" y="58" width="148" height="60" rx="3"></rect>
+        <text class="dg-t" x="282" y="84">StrataCDO</text>
+        <text class="dg-s" x="282" y="102">0x908B…0e20</text>
+
+        <line class="dg-edge" x1="416" y1="88" x2="492" y2="88" marker-end="url(#a)"></line>
+        <text class="dg-lb" x="424" y="81">invest</text>
+
+        <rect class="dg-box" x="492" y="58" width="176" height="60" rx="3"></rect>
+        <text class="dg-t" x="506" y="84">sUSDeStrategy</text>
+        <text class="dg-s" x="506" y="102">stakes USDe</text>
+
+        <line class="dg-edge-ext" x1="668" y1="88" x2="740" y2="88" marker-end="url(#ax)"></line>
+        <rect class="dg-ext" x="740" y="58" width="184" height="60" rx="3"></rect>
+        <text class="dg-t" x="754" y="84">sUSDe</text>
+        <text class="dg-s" x="754" y="102">Ethena staking vault</text>
+
+        <rect class="dg-coolgroup" x="470" y="168" width="454" height="76" rx="4"></rect>
+        <text class="dg-cglb" x="482" y="186">COOLDOWNS ON WITHDRAWAL</text>
+        <rect class="dg-dash" x="482" y="194" width="136" height="42" rx="3"></rect>
+        <text class="dg-off" x="492" y="212">SharesCooldown</text>
+        <text class="dg-s" x="492" y="227">not deployed</text>
+        <rect class="dg-cool" x="628" y="194" width="136" height="42" rx="3"></rect>
+        <text class="dg-t" x="638" y="212">ERC20Cooldown</text>
+        <text class="dg-s" x="638" y="227">sUSDe out · 7d jrt</text>
+        <rect class="dg-cool" x="774" y="194" width="138" height="42" rx="3"></rect>
+        <text class="dg-t" x="784" y="212">UnstakeCooldown</text>
+        <text class="dg-s" x="784" y="227">Ethena 7d queue</text>
+
+        <line class="dg-edge-cool" x1="580" y1="118" x2="580" y2="168" marker-end="url(#ac)"></line>
+        <text class="dg-clb" x="588" y="146">tokens</text>
+
+        <line class="dg-edge" x1="310" y1="118" x2="310" y2="272" marker-start="url(#a)" marker-end="url(#a)"></line>
+        <text class="dg-lb" x="318" y="200">NAV split</text>
+
+        <rect class="dg-box" x="268" y="272" width="148" height="52" rx="3"></rect>
+        <text class="dg-t" x="282" y="294">Accounting</text>
+        <text class="dg-s" x="282" y="311">continuous</text>
+        <line class="dg-edge" x1="492" y1="298" x2="416" y2="298" marker-end="url(#a)"></line>
+        <rect class="dg-box" x="492" y="272" width="176" height="52" rx="3"></rect>
+        <text class="dg-t" x="506" y="294">AprPairFeed</text>
+        <text class="dg-s" x="506" y="311">target + base APR</text>
+        <line class="dg-edge-soft" x1="740" y1="298" x2="668" y2="298" marker-end="url(#as)"></line>
+        <rect class="dg-dash" x="740" y="272" width="184" height="52" rx="3"></rect>
+        <text class="dg-t" x="754" y="294">AaveAprPairProvider</text>
+        <text class="dg-s" x="754" y="311">Aave v3 USDC + USDT</text>
+      </svg>
+    </div>
+    <figcaption><b>The only market with no share-level cooldown.</b> Nothing connects the CDO to a <code>SharesCooldown</code> — redemptions are gated purely by the two token rails on the strategy.</figcaption>
+  </figure>
+</div>
+
+<!-- ══════════════════ NEUTRL ══════════════════ -->
+<div class="market">
+  <div class="m-head">
+    <span class="m-name">neutrl</span>
+    <span class="m-sub">base NUSD</span>
+    <span class="badges"><span class="badge topo">single strategy</span><span class="badge cool">3 of 3 rails</span><span class="badge cont">continuous</span></span>
+  </div>
+  <figure>
+    <div class="figscroll">
+      <svg class="dia" viewBox="0 0 940 356" role="img" aria-label="Neutrl market: junior and senior NUSD tranches feed the CDO, which stakes into sNUSD; all three cooldown rails are wired, a swap adapter converts other stablecoins on deposit.">
+        <rect class="dg-dash" x="16" y="14" width="176" height="152" rx="4"></rect>
+        <text class="dg-glb" x="28" y="32">TRANCHES</text>
+        <rect class="dg-jr" x="30" y="42" width="148" height="48" rx="3"></rect>
+        <text class="dg-t" x="44" y="62">jrNUSD</text>
+        <text class="dg-s" x="44" y="78">junior</text>
+        <rect class="dg-sr" x="30" y="102" width="148" height="48" rx="3"></rect>
+        <text class="dg-t" x="44" y="122">srNUSD</text>
+        <text class="dg-s" x="44" y="138">senior</text>
+
+        <path class="dg-edge-jr" d="M178 66 L268 76" marker-end="url(#aj)"></path>
+        <path class="dg-edge-sr" d="M178 126 L268 102" marker-end="url(#at)"></path>
+
+        <rect class="dg-core" x="268" y="58" width="148" height="60" rx="3"></rect>
+        <text class="dg-t" x="282" y="84">StrataCDO</text>
+        <text class="dg-s" x="282" y="102">0x7b6c…dd10</text>
+
+        <line class="dg-edge" x1="416" y1="88" x2="492" y2="88" marker-end="url(#a)"></line>
+        <text class="dg-lb" x="424" y="81">invest</text>
+
+        <rect class="dg-box" x="492" y="58" width="176" height="60" rx="3"></rect>
+        <text class="dg-t" x="506" y="84">sNUSDStrategy</text>
+        <text class="dg-s" x="506" y="102">stakes NUSD</text>
+
+        <line class="dg-edge-ext" x1="668" y1="88" x2="740" y2="88" marker-end="url(#ax)"></line>
+        <rect class="dg-ext" x="740" y="58" width="184" height="60" rx="3"></rect>
+        <text class="dg-t" x="754" y="84">sNUSD</text>
+        <text class="dg-s" x="754" y="102">Neutrl staking vault</text>
+
+        <rect class="dg-coolgroup" x="470" y="168" width="454" height="76" rx="4"></rect>
+        <text class="dg-cglb" x="482" y="186">COOLDOWNS ON WITHDRAWAL</text>
+        <rect class="dg-cool" x="482" y="194" width="136" height="42" rx="3"></rect>
+        <text class="dg-t" x="492" y="212">SharesCooldown</text>
+        <text class="dg-s" x="492" y="227">jrt 35d / 10d / fee</text>
+        <rect class="dg-cool" x="628" y="194" width="136" height="42" rx="3"></rect>
+        <text class="dg-t" x="638" y="212">ERC20Cooldown</text>
+        <text class="dg-s" x="638" y="227">sNUSD out</text>
+        <rect class="dg-cool" x="774" y="194" width="138" height="42" rx="3"></rect>
+        <text class="dg-t" x="784" y="212">UnstakeCooldown</text>
+        <text class="dg-s" x="784" y="227">Neutrl silo</text>
+
+        <path class="dg-edge-cool" d="M350 118 L470 182" marker-end="url(#ac)"></path>
+        <text class="dg-clb" x="366" y="158">shares</text>
+        <line class="dg-edge-cool" x1="580" y1="118" x2="580" y2="168" marker-end="url(#ac)"></line>
+        <text class="dg-clb" x="588" y="146">tokens</text>
+
+        <line class="dg-edge" x1="310" y1="118" x2="310" y2="272" marker-start="url(#a)" marker-end="url(#a)"></line>
+        <text class="dg-lb" x="220" y="200">NAV split</text>
+
+        <rect class="dg-box" x="268" y="272" width="148" height="52" rx="3"></rect>
+        <text class="dg-t" x="282" y="294">Accounting</text>
+        <text class="dg-s" x="282" y="311">continuous</text>
+        <line class="dg-edge" x1="492" y1="298" x2="416" y2="298" marker-end="url(#a)"></line>
+        <rect class="dg-box" x="492" y="272" width="176" height="52" rx="3"></rect>
+        <text class="dg-t" x="506" y="294">AprPairFeed</text>
+        <text class="dg-s" x="506" y="311">target + base APR</text>
+        <line class="dg-edge-soft" x1="740" y1="298" x2="668" y2="298" marker-end="url(#as)"></line>
+        <rect class="dg-dash" x="740" y="272" width="184" height="52" rx="3"></rect>
+        <text class="dg-t" x="754" y="294">sNUSDAprPairProvider</text>
+        <text class="dg-s" x="754" y="311">sUSDe target · sNUSD base</text>
+
+        <rect class="dg-dash" x="16" y="272" width="176" height="52" rx="3"></rect>
+        <text class="dg-t" x="28" y="294">SNUSDSwapAdapter</text>
+        <text class="dg-s" x="28" y="311">USDC · USDT · USDe in</text>
+        <line class="dg-edge-soft" x1="104" y1="272" x2="104" y2="166" marker-end="url(#as)"></line>
+      </svg>
+    </div>
+    <figcaption>All three rails live. The share tier is the strictest on any market — 35 days for a fee-free junior exit. It is also the only market with a valuation keeper, which can freeze flows for 24 hours on a markdown.</figcaption>
+  </figure>
+</div>
+
+<!-- ══════════════════ SATURN ══════════════════ -->
+<div class="market">
+  <div class="m-head">
+    <span class="m-name">saturn</span>
+    <span class="m-sub">base USDat · 6 decimals</span>
+    <span class="badges"><span class="badge topo">single strategy</span><span class="badge cool">3 of 3 rails</span><span class="badge cont">continuous</span></span>
+  </div>
+  <figure>
+    <div class="figscroll">
+      <svg class="dia" viewBox="0 0 940 356" role="img" aria-label="Saturn market: junior and senior USDat tranches feed the CDO, which stakes into the sUSDat vault; all three cooldown rails are wired.">
+        <rect class="dg-dash" x="16" y="14" width="176" height="152" rx="4"></rect>
+        <text class="dg-glb" x="28" y="32">TRANCHES</text>
+        <rect class="dg-jr" x="30" y="42" width="148" height="48" rx="3"></rect>
+        <text class="dg-t" x="44" y="62">jrUSDat</text>
+        <text class="dg-s" x="44" y="78">junior</text>
+        <rect class="dg-sr" x="30" y="102" width="148" height="48" rx="3"></rect>
+        <text class="dg-t" x="44" y="122">srUSDat</text>
+        <text class="dg-s" x="44" y="138">senior</text>
+
+        <path class="dg-edge-jr" d="M178 66 L268 76" marker-end="url(#aj)"></path>
+        <path class="dg-edge-sr" d="M178 126 L268 102" marker-end="url(#at)"></path>
+
+        <rect class="dg-core" x="268" y="58" width="148" height="60" rx="3"></rect>
+        <text class="dg-t" x="282" y="84">StrataCDO</text>
+        <text class="dg-s" x="282" y="102">0xa617…846b</text>
+
+        <line class="dg-edge" x1="416" y1="88" x2="492" y2="88" marker-end="url(#a)"></line>
+        <text class="dg-lb" x="424" y="81">invest</text>
+
+        <rect class="dg-box" x="492" y="58" width="176" height="60" rx="3"></rect>
+        <text class="dg-t" x="506" y="84">SaturnStrategy</text>
+        <text class="dg-s" x="506" y="102">stakes USDat</text>
+
+        <line class="dg-edge-ext" x1="668" y1="88" x2="740" y2="88" marker-end="url(#ax)"></line>
+        <rect class="dg-ext" x="740" y="58" width="184" height="60" rx="3"></rect>
+        <text class="dg-t" x="754" y="84">sUSDat</text>
+        <text class="dg-s" x="754" y="102">Saturn vault + STRC oracle</text>
+
+        <rect class="dg-coolgroup" x="470" y="168" width="454" height="76" rx="4"></rect>
+        <text class="dg-cglb" x="482" y="186">COOLDOWNS ON WITHDRAWAL</text>
+        <rect class="dg-cool" x="482" y="194" width="136" height="42" rx="3"></rect>
+        <text class="dg-t" x="492" y="212">SharesCooldown</text>
+        <text class="dg-s" x="492" y="227">tiered lock + fee</text>
+        <rect class="dg-cool" x="628" y="194" width="136" height="42" rx="3"></rect>
+        <text class="dg-t" x="638" y="212">ERC20Cooldown</text>
+        <text class="dg-s" x="638" y="227">sUSDat out</text>
+        <rect class="dg-cool" x="774" y="194" width="138" height="42" rx="3"></rect>
+        <text class="dg-t" x="784" y="212">UnstakeCooldown</text>
+        <text class="dg-s" x="784" y="227">sUSDat withdraw queue</text>
+
+        <path class="dg-edge-cool" d="M350 118 L470 182" marker-end="url(#ac)"></path>
+        <text class="dg-clb" x="366" y="158">shares</text>
+        <line class="dg-edge-cool" x1="580" y1="118" x2="580" y2="168" marker-end="url(#ac)"></line>
+        <text class="dg-clb" x="588" y="146">tokens</text>
+
+        <line class="dg-edge" x1="310" y1="118" x2="310" y2="272" marker-start="url(#a)" marker-end="url(#a)"></line>
+        <text class="dg-lb" x="220" y="200">NAV split</text>
+
+        <rect class="dg-box" x="268" y="272" width="148" height="52" rx="3"></rect>
+        <text class="dg-t" x="282" y="294">Accounting</text>
+        <text class="dg-s" x="282" y="311">continuous</text>
+        <line class="dg-edge" x1="492" y1="298" x2="416" y2="298" marker-end="url(#a)"></line>
+        <rect class="dg-box" x="492" y="272" width="176" height="52" rx="3"></rect>
+        <text class="dg-t" x="506" y="294">AprPairFeed</text>
+        <text class="dg-s" x="506" y="311">target + base APR</text>
+        <line class="dg-edge-soft" x1="740" y1="298" x2="668" y2="298" marker-end="url(#as)"></line>
+        <rect class="dg-dash" x="740" y="272" width="184" height="52" rx="3"></rect>
+        <text class="dg-t" x="754" y="294">SaturnAprPairProvider</text>
+        <text class="dg-s" x="754" y="311">ACM-gated · 7.5% seed</text>
+      </svg>
+    </div>
+    <figcaption>All three rails live. The unstake rail queues in the sUSDat withdrawal queue, and the vault's value carries the STRC oracle price, so Junior takes mark-to-market movement rather than accrual alone.</figcaption>
+  </figure>
+</div>
+
+<!-- ══════════════════ FIGURE ══════════════════ -->
+<div class="market">
+  <div class="m-head">
+    <span class="m-name">figure</span>
+    <span class="m-sub">base USDC</span>
+    <span class="badges"><span class="badge topo">single strategy · 2 vaults chained</span><span class="badge cool">3 of 3 rails</span><span class="badge disc">discrete</span></span>
+  </div>
+  <figure>
+    <div class="figscroll">
+      <svg class="dia" viewBox="0 0 940 356" role="img" aria-label="Figure market: junior and senior PRIME tranches feed the CDO, which invests through one Figure strategy that wraps USDC into wYLDS and stakes it into PRIME; all three cooldown rails are wired.">
+        <rect class="dg-dash" x="16" y="14" width="176" height="152" rx="4"></rect>
+        <text class="dg-glb" x="28" y="32">TRANCHES</text>
+        <rect class="dg-jr" x="30" y="42" width="148" height="48" rx="3"></rect>
+        <text class="dg-t" x="44" y="62">jrPRIME</text>
+        <text class="dg-s" x="44" y="78">junior</text>
+        <rect class="dg-sr" x="30" y="102" width="148" height="48" rx="3"></rect>
+        <text class="dg-t" x="44" y="122">srPRIME</text>
+        <text class="dg-s" x="44" y="138">senior</text>
+
+        <path class="dg-edge-jr" d="M178 66 L268 76" marker-end="url(#aj)"></path>
+        <path class="dg-edge-sr" d="M178 126 L268 102" marker-end="url(#at)"></path>
+
+        <rect class="dg-core" x="268" y="58" width="148" height="60" rx="3"></rect>
+        <text class="dg-t" x="282" y="84">StrataCDO</text>
+        <text class="dg-s" x="282" y="102">0xff40…C234</text>
+
+        <line class="dg-edge" x1="416" y1="88" x2="492" y2="88" marker-end="url(#a)"></line>
+        <text class="dg-lb" x="424" y="81">invest</text>
+
+        <rect class="dg-box" x="492" y="58" width="176" height="60" rx="3"></rect>
+        <text class="dg-t" x="506" y="84">FigureStrategy</text>
+        <text class="dg-s" x="506" y="102">one contract, two vaults</text>
+
+        <path class="dg-edge-ext" d="M668 88 L740 54" marker-end="url(#ax)"></path>
+        <rect class="dg-ext" x="740" y="26" width="184" height="52" rx="3"></rect>
+        <text class="dg-t" x="754" y="48">yieldVault · wYLDS</text>
+        <text class="dg-s" x="754" y="65">USDC wrapper, 1:1</text>
+        <line class="dg-edge-ext" x1="832" y1="78" x2="832" y2="100" marker-end="url(#ax)"></line>
+        <rect class="dg-ext" x="740" y="100" width="184" height="52" rx="3"></rect>
+        <text class="dg-t" x="754" y="122">stakingVault · PRIME</text>
+        <text class="dg-s" x="754" y="139">the held position</text>
+
+        <rect class="dg-coolgroup" x="470" y="168" width="454" height="76" rx="4"></rect>
+        <text class="dg-cglb" x="482" y="186">COOLDOWNS ON WITHDRAWAL</text>
+        <rect class="dg-cool" x="482" y="194" width="136" height="42" rx="3"></rect>
+        <text class="dg-t" x="492" y="212">SharesCooldown</text>
+        <text class="dg-s" x="492" y="227">tiered lock + fee</text>
+        <rect class="dg-cool" x="628" y="194" width="136" height="42" rx="3"></rect>
+        <text class="dg-t" x="638" y="212">ERC20Cooldown</text>
+        <text class="dg-s" x="638" y="227">PRIME / wYLDS out</text>
+        <rect class="dg-cool" x="774" y="194" width="138" height="42" rx="3"></rect>
+        <text class="dg-t" x="784" y="212">UnstakeCooldown</text>
+        <text class="dg-s" x="784" y="227">yieldVault redeem</text>
+
+        <path class="dg-edge-cool" d="M350 118 L470 182" marker-end="url(#ac)"></path>
+        <text class="dg-clb" x="366" y="158">shares</text>
+        <line class="dg-edge-cool" x1="580" y1="118" x2="580" y2="168" marker-end="url(#ac)"></line>
+        <text class="dg-clb" x="588" y="146">tokens</text>
+
+        <line class="dg-edge" x1="310" y1="118" x2="310" y2="272" marker-start="url(#a)" marker-end="url(#a)"></line>
+        <text class="dg-lb" x="220" y="200">NAV split</text>
+
+        <rect class="dg-box" x="268" y="272" width="148" height="52" rx="3"></rect>
+        <text class="dg-t" x="282" y="294">DiscreteAccounting</text>
+        <text class="dg-s" x="282" y="311">true-up on reward</text>
+        <line class="dg-edge" x1="492" y1="298" x2="416" y2="298" marker-end="url(#a)"></line>
+        <rect class="dg-box" x="492" y="272" width="176" height="52" rx="3"></rect>
+        <text class="dg-t" x="506" y="294">AprPairFeed</text>
+        <text class="dg-s" x="506" y="311">target + base APR</text>
+        <line class="dg-edge-soft" x1="740" y1="298" x2="668" y2="298" marker-end="url(#as)"></line>
+        <rect class="dg-dash" x="740" y="272" width="184" height="52" rx="3"></rect>
+        <text class="dg-t" x="754" y="294">ConstantOracleApr…</text>
+        <text class="dg-s" x="754" y="311">Figure prime feed</text>
+      </svg>
+    </div>
+    <figcaption><b>Two vaults, still one strategy.</b> The vaults are chained — USDC wraps to wYLDS, wYLDS stakes to PRIME — not allocated between. Withdrawing USDC unwinds both hops through the unstake rail.</figcaption>
+  </figure>
+</div>
+
+<!-- ══════════════════ MHYPER ══════════════════ -->
+<div class="market">
+  <div class="m-head">
+    <span class="m-name">mhyper</span>
+    <span class="m-sub">base USDC</span>
+    <span class="badges"><span class="badge topo">single strategy</span><span class="badge cool">3 of 3 rails</span><span class="badge disc">discrete</span></span>
+  </div>
+  <figure>
+    <div class="figscroll">
+      <svg class="dia" viewBox="0 0 940 356" role="img" aria-label="mHYPER market: junior and senior tranches feed the CDO, which mints mHYPER through the Midas deposit vault; all three cooldown rails are wired and redemptions queue in the Midas redemption vault.">
+        <rect class="dg-dash" x="16" y="14" width="176" height="152" rx="4"></rect>
+        <text class="dg-glb" x="28" y="32">TRANCHES</text>
+        <rect class="dg-jr" x="30" y="42" width="148" height="48" rx="3"></rect>
+        <text class="dg-t" x="44" y="62">jrmHYPER</text>
+        <text class="dg-s" x="44" y="78">junior</text>
+        <rect class="dg-sr" x="30" y="102" width="148" height="48" rx="3"></rect>
+        <text class="dg-t" x="44" y="122">srmHYPER</text>
+        <text class="dg-s" x="44" y="138">senior</text>
+
+        <path class="dg-edge-jr" d="M178 66 L268 76" marker-end="url(#aj)"></path>
+        <path class="dg-edge-sr" d="M178 126 L268 102" marker-end="url(#at)"></path>
+
+        <rect class="dg-core" x="268" y="58" width="148" height="60" rx="3"></rect>
+        <text class="dg-t" x="282" y="84">StrataCDO</text>
+        <text class="dg-s" x="282" y="102">0x39C7…e6cf</text>
+
+        <line class="dg-edge" x1="416" y1="88" x2="492" y2="88" marker-end="url(#a)"></line>
+        <text class="dg-lb" x="424" y="81">invest</text>
+
+        <rect class="dg-box" x="492" y="58" width="176" height="60" rx="3"></rect>
+        <text class="dg-t" x="506" y="84">MidasStrategy</text>
+        <text class="dg-s" x="506" y="102">USDC · DAI · USDS in</text>
+
+        <path class="dg-edge-ext" d="M668 88 L740 54" marker-end="url(#ax)"></path>
+        <rect class="dg-ext" x="740" y="26" width="184" height="52" rx="3"></rect>
+        <text class="dg-t" x="754" y="46">Midas deposit /</text>
+        <text class="dg-t" x="754" y="62">redemption vaults</text>
+        <line class="dg-edge-ext" x1="832" y1="78" x2="832" y2="100" marker-end="url(#ax)"></line>
+        <rect class="dg-ext" x="740" y="100" width="184" height="52" rx="3"></rect>
+        <text class="dg-t" x="754" y="122">mHYPER</text>
+        <text class="dg-s" x="754" y="139">the held position</text>
+
+        <rect class="dg-coolgroup" x="470" y="168" width="454" height="76" rx="4"></rect>
+        <text class="dg-cglb" x="482" y="186">COOLDOWNS ON WITHDRAWAL</text>
+        <rect class="dg-cool" x="482" y="194" width="136" height="42" rx="3"></rect>
+        <text class="dg-t" x="492" y="212">SharesCooldown</text>
+        <text class="dg-s" x="492" y="227">jrt 21d / 7d / fee</text>
+        <rect class="dg-cool" x="628" y="194" width="136" height="42" rx="3"></rect>
+        <text class="dg-t" x="638" y="212">ERC20Cooldown</text>
+        <text class="dg-s" x="638" y="227">mHYPER out</text>
+        <rect class="dg-cool" x="774" y="194" width="138" height="42" rx="3"></rect>
+        <text class="dg-t" x="784" y="212">UnstakeCooldown</text>
+        <text class="dg-s" x="784" y="227">Midas redeem queue</text>
+
+        <path class="dg-edge-cool" d="M350 118 L470 182" marker-end="url(#ac)"></path>
+        <text class="dg-clb" x="366" y="158">shares</text>
+        <line class="dg-edge-cool" x1="580" y1="118" x2="580" y2="168" marker-end="url(#ac)"></line>
+        <text class="dg-clb" x="588" y="146">tokens</text>
+
+        <line class="dg-edge" x1="310" y1="118" x2="310" y2="272" marker-start="url(#a)" marker-end="url(#a)"></line>
+        <text class="dg-lb" x="220" y="200">NAV split</text>
+
+        <rect class="dg-box" x="268" y="272" width="148" height="52" rx="3"></rect>
+        <text class="dg-t" x="282" y="294">DiscreteAccounting</text>
+        <text class="dg-s" x="282" y="311">true-up on oracle round</text>
+        <line class="dg-edge" x1="492" y1="298" x2="416" y2="298" marker-end="url(#a)"></line>
+        <rect class="dg-box" x="492" y="272" width="176" height="52" rx="3"></rect>
+        <text class="dg-t" x="506" y="294">AprPairFeed</text>
+        <text class="dg-s" x="506" y="311">target + base APR</text>
+        <line class="dg-edge-soft" x1="740" y1="298" x2="668" y2="298" marker-end="url(#as)"></line>
+        <rect class="dg-dash" x="740" y="272" width="184" height="52" rx="3"></rect>
+        <text class="dg-t" x="754" y="294">AaveOracleApr…</text>
+        <text class="dg-s" x="754" y="311">Aave rates + Midas oracle</text>
+      </svg>
+    </div>
+    <figcaption>All three rails live. Minting is instant through the deposit vault; redeeming is a queued request held by a cloned proxy that carries the redemption vault address.</figcaption>
+  </figure>
+</div>
+
+<!-- ══════════════════ MM1USD ══════════════════ -->
+<div class="market">
+  <div class="m-head">
+    <span class="m-name">mm1usd</span>
+    <span class="m-sub">base USDC</span>
+    <span class="badges"><span class="badge topo">single strategy</span><span class="badge cool">3 of 3 rails</span><span class="badge disc">discrete</span></span>
+  </div>
+  <figure>
+    <div class="figscroll">
+      <svg class="dia" viewBox="0 0 940 356" role="img" aria-label="mM1-USD market: the same Midas machinery as mHYPER with USDC only; all three cooldown rails are wired but every shares tier is fee-free.">
+        <rect class="dg-dash" x="16" y="14" width="176" height="152" rx="4"></rect>
+        <text class="dg-glb" x="28" y="32">TRANCHES</text>
+        <rect class="dg-jr" x="30" y="42" width="148" height="48" rx="3"></rect>
+        <text class="dg-t" x="44" y="62">jrmM1-USD</text>
+        <text class="dg-s" x="44" y="78">junior</text>
+        <rect class="dg-sr" x="30" y="102" width="148" height="48" rx="3"></rect>
+        <text class="dg-t" x="44" y="122">srmM1-USD</text>
+        <text class="dg-s" x="44" y="138">senior</text>
+
+        <path class="dg-edge-jr" d="M178 66 L268 76" marker-end="url(#aj)"></path>
+        <path class="dg-edge-sr" d="M178 126 L268 102" marker-end="url(#at)"></path>
+
+        <rect class="dg-core" x="268" y="58" width="148" height="60" rx="3"></rect>
+        <text class="dg-t" x="282" y="84">StrataCDO</text>
+        <text class="dg-s" x="282" y="102">0x613D…0E5f</text>
+
+        <line class="dg-edge" x1="416" y1="88" x2="492" y2="88" marker-end="url(#a)"></line>
+        <text class="dg-lb" x="424" y="81">invest</text>
+
+        <rect class="dg-box" x="492" y="58" width="176" height="60" rx="3"></rect>
+        <text class="dg-t" x="506" y="84">MidasStrategy</text>
+        <text class="dg-s" x="506" y="102">USDC only</text>
+
+        <path class="dg-edge-ext" d="M668 88 L740 54" marker-end="url(#ax)"></path>
+        <rect class="dg-ext" x="740" y="26" width="184" height="52" rx="3"></rect>
+        <text class="dg-t" x="754" y="46">Midas deposit /</text>
+        <text class="dg-t" x="754" y="62">redemption vaults</text>
+        <line class="dg-edge-ext" x1="832" y1="78" x2="832" y2="100" marker-end="url(#ax)"></line>
+        <rect class="dg-ext" x="740" y="100" width="184" height="52" rx="3"></rect>
+        <text class="dg-t" x="754" y="122">mM1-USD</text>
+        <text class="dg-s" x="754" y="139">the held position</text>
+
+        <rect class="dg-coolgroup" x="470" y="168" width="454" height="76" rx="4"></rect>
+        <text class="dg-cglb" x="482" y="186">COOLDOWNS ON WITHDRAWAL</text>
+        <rect class="dg-cool" x="482" y="194" width="136" height="42" rx="3"></rect>
+        <text class="dg-t" x="492" y="212">SharesCooldown</text>
+        <text class="dg-s" x="492" y="227">28d / 14d · 0 bps</text>
+        <rect class="dg-cool" x="628" y="194" width="136" height="42" rx="3"></rect>
+        <text class="dg-t" x="638" y="212">ERC20Cooldown</text>
+        <text class="dg-s" x="638" y="227">mM1-USD out</text>
+        <rect class="dg-cool" x="774" y="194" width="138" height="42" rx="3"></rect>
+        <text class="dg-t" x="784" y="212">UnstakeCooldown</text>
+        <text class="dg-s" x="784" y="227">Midas redeem queue</text>
+
+        <path class="dg-edge-cool" d="M350 118 L470 182" marker-end="url(#ac)"></path>
+        <text class="dg-clb" x="366" y="158">shares</text>
+        <line class="dg-edge-cool" x1="580" y1="118" x2="580" y2="168" marker-end="url(#ac)"></line>
+        <text class="dg-clb" x="588" y="146">tokens</text>
+
+        <line class="dg-edge" x1="310" y1="118" x2="310" y2="272" marker-start="url(#a)" marker-end="url(#a)"></line>
+        <text class="dg-lb" x="220" y="200">NAV split</text>
+
+        <rect class="dg-box" x="268" y="272" width="148" height="52" rx="3"></rect>
+        <text class="dg-t" x="282" y="294">DiscreteAccounting</text>
+        <text class="dg-s" x="282" y="311">reserve bps = 0</text>
+        <line class="dg-edge" x1="492" y1="298" x2="416" y2="298" marker-end="url(#a)"></line>
+        <rect class="dg-box" x="492" y="272" width="176" height="52" rx="3"></rect>
+        <text class="dg-t" x="506" y="294">AprPairFeed</text>
+        <text class="dg-s" x="506" y="311">target + base APR</text>
+        <line class="dg-edge-soft" x1="740" y1="298" x2="668" y2="298" marker-end="url(#as)"></line>
+        <rect class="dg-dash" x="740" y="272" width="184" height="52" rx="3"></rect>
+        <text class="dg-t" x="754" y="294">ConstantOracleApr…</text>
+        <text class="dg-s" x="754" y="311">fixed pair</text>
+      </svg>
+    </div>
+    <figcaption>A second instance of the same <code>MidasStrategy</code> code with different economics: USDC only, zero performance fee, and share tiers that lock but never charge.</figcaption>
+  </figure>
+</div>
+
+<!-- ══════════════════ NESTOPAL ══════════════════ -->
+<div class="market">
+  <div class="m-head">
+    <span class="m-name">nestopal</span>
+    <span class="m-sub">base USDC</span>
+    <span class="badges"><span class="badge topo">single strategy</span><span class="badge cool">2 of 3 rails</span><span class="badge dys">dys</span></span>
+  </div>
+  <figure>
+    <div class="figscroll">
+      <svg class="dia" viewBox="0 0 940 356" role="img" aria-label="Nest BlackOpal market: a deposit adapter converts USDC to nOPAL before the tranches; the strategy holds nOPAL only and is wired to the ERC20 cooldown, while the unstake cooldown is deployed but has no request implementation.">
+        <rect class="dg-dash" x="16" y="14" width="176" height="152" rx="4"></rect>
+        <text class="dg-glb" x="28" y="32">TRANCHES</text>
+        <rect class="dg-jr" x="30" y="42" width="148" height="48" rx="3"></rect>
+        <text class="dg-t" x="44" y="62">jrnOPAL</text>
+        <text class="dg-s" x="44" y="78">junior</text>
+        <rect class="dg-sr" x="30" y="102" width="148" height="48" rx="3"></rect>
+        <text class="dg-t" x="44" y="122">srnOPAL</text>
+        <text class="dg-s" x="44" y="138">senior</text>
+
+        <path class="dg-edge-jr" d="M178 66 L268 76" marker-end="url(#aj)"></path>
+        <path class="dg-edge-sr" d="M178 126 L268 102" marker-end="url(#at)"></path>
+
+        <rect class="dg-core" x="268" y="58" width="148" height="60" rx="3"></rect>
+        <text class="dg-t" x="282" y="84">StrataCDO</text>
+        <text class="dg-s" x="282" y="102">0xaE21…4edE</text>
+
+        <line class="dg-edge" x1="416" y1="88" x2="492" y2="88" marker-end="url(#a)"></line>
+        <text class="dg-lb" x="424" y="81">invest</text>
+
+        <rect class="dg-box" x="492" y="58" width="176" height="60" rx="3"></rect>
+        <text class="dg-t" x="506" y="84">NestOpalStrategy</text>
+        <text class="dg-s" x="506" y="102">holds nOPAL only</text>
+
+        <line class="dg-edge-ext" x1="668" y1="88" x2="740" y2="88" marker-end="url(#ax)"></line>
+        <rect class="dg-ext" x="740" y="58" width="184" height="60" rx="3"></rect>
+        <text class="dg-t" x="754" y="84">nOPAL</text>
+        <text class="dg-s" x="754" y="102">Nest BoringVault · 6 dp</text>
+
+        <rect class="dg-coolgroup" x="470" y="168" width="454" height="76" rx="4"></rect>
+        <text class="dg-cglb" x="482" y="186">COOLDOWNS ON WITHDRAWAL</text>
+        <rect class="dg-cool" x="482" y="194" width="136" height="42" rx="3"></rect>
+        <text class="dg-t" x="492" y="212">SharesCooldown</text>
+        <text class="dg-s" x="492" y="227">tiered lock + fee</text>
+        <rect class="dg-cool" x="628" y="194" width="136" height="42" rx="3"></rect>
+        <text class="dg-t" x="638" y="212">ERC20Cooldown</text>
+        <text class="dg-s" x="638" y="227">nOPAL out — only rail</text>
+        <rect class="dg-dash" x="774" y="194" width="138" height="42" rx="3"></rect>
+        <text class="dg-off" x="784" y="212">UnstakeCooldown</text>
+        <text class="dg-s" x="784" y="227">deployed, no impl</text>
+
+        <path class="dg-edge-cool" d="M350 118 L470 182" marker-end="url(#ac)"></path>
+        <text class="dg-clb" x="366" y="158">shares</text>
+        <line class="dg-edge-cool" x1="580" y1="118" x2="580" y2="168" marker-end="url(#ac)"></line>
+        <text class="dg-clb" x="588" y="146">tokens</text>
+
+        <line class="dg-edge" x1="310" y1="118" x2="310" y2="272" marker-start="url(#a)" marker-end="url(#a)"></line>
+        <text class="dg-lb" x="220" y="200">NAV split</text>
+
+        <rect class="dg-box" x="268" y="272" width="148" height="52" rx="3"></rect>
+        <text class="dg-t" x="282" y="294">DYSAccounting</text>
+        <text class="dg-s" x="282" y="311">asset-time true-up</text>
+        <line class="dg-edge" x1="492" y1="298" x2="416" y2="298" marker-end="url(#a)"></line>
+        <rect class="dg-box" x="492" y="272" width="176" height="52" rx="3"></rect>
+        <text class="dg-t" x="506" y="294">AprPairFeed</text>
+        <text class="dg-s" x="506" y="311">target + base APR</text>
+        <line class="dg-edge-soft" x1="740" y1="298" x2="668" y2="298" marker-end="url(#as)"></line>
+        <rect class="dg-dash" x="740" y="272" width="184" height="52" rx="3"></rect>
+        <text class="dg-t" x="754" y="294">NestAccountantApr…</text>
+        <text class="dg-s" x="754" y="311">Nest Accountant rounds</text>
+
+        <rect class="dg-dash" x="16" y="272" width="176" height="52" rx="3"></rect>
+        <text class="dg-t" x="28" y="294">NestOpalDepositAdapter</text>
+        <text class="dg-s" x="28" y="311">USDC → nOPAL, depositor V4</text>
+        <line class="dg-edge-soft" x1="104" y1="272" x2="104" y2="166" marker-end="url(#as)"></line>
+      </svg>
+    </div>
+    <figcaption><b>The unstake rail is dead here.</b> An <code>UnstakeCooldown</code> is deployed, but no request implementation is registered for nOPAL and the strategy's <code>initialize()</code> never receives its address — so exits leave as nOPAL through the ERC20 rail and the user redeems to USDC off-protocol.</figcaption>
+  </figure>
+</div>
+
+<!-- ══════════════════ MULTI-STRATEGY CONTRAST ══════════════════ -->
+<section>
+  <div class="sec-head">
+    <p class="eyebrow">for contrast — not deployed</p>
+    <h2>What a multi-strategy market looks like</h2>
+  </div>
+  <p class="note"><code>spkMhyperIso</code> is the only market configured as multi-strategy. It has a complete deployment class and fork tests but appears in no deployment file, so nothing below is live.</p>
+
+  <figure>
+    <div class="figscroll">
+      <svg class="dia" viewBox="0 0 940 440" role="img" aria-label="The isolated strategy topology: junior and senior tranches feed one CDO, which points at an IsolatedStrategy owning two sub-strategies — a liquid Spark USDC leg and an illiquid Midas mHYPER leg — with a rebalancer between them. The shares cooldown hangs off the CDO, the ERC20 cooldown serves both legs, and the unstake cooldown serves the Midas leg only.">
+        <rect class="dg-dash" x="16" y="14" width="240" height="112" rx="4"></rect>
+        <text class="dg-glb" x="28" y="32">TRANCHES</text>
+        <rect class="dg-jr" x="28" y="42" width="104" height="74" rx="3"></rect>
+        <text class="dg-t" x="40" y="66">jrIsoSpk</text>
+        <text class="dg-s" x="40" y="84">junior</text>
+        <text class="dg-s" x="40" y="100">funds Spark</text>
+        <rect class="dg-sr" x="140" y="42" width="104" height="74" rx="3"></rect>
+        <text class="dg-t" x="152" y="66">srIsoMHYPER</text>
+        <text class="dg-s" x="152" y="84">senior</text>
+        <text class="dg-s" x="152" y="100">funds Midas</text>
+
+        <line class="dg-edge-jr" x1="80" y1="116" x2="80" y2="150" marker-end="url(#aj)"></line>
+        <path class="dg-edge-sr" d="M192 116 L150 150" marker-end="url(#at)"></path>
+
+        <rect class="dg-core" x="20" y="150" width="160" height="60" rx="3"></rect>
+        <text class="dg-t" x="34" y="176">StrataCDO</text>
+        <text class="dg-s" x="34" y="194">sees one strategy</text>
+        <line class="dg-edge" x1="180" y1="180" x2="250" y2="180" marker-end="url(#a)"></line>
+
+        <rect class="dg-core" x="250" y="140" width="190" height="80" rx="3"></rect>
+        <text class="dg-t" x="264" y="166">IsolatedStrategy</text>
+        <text class="dg-s" x="264" y="183">is MultiStrategy</text>
+        <text class="dg-s" x="264" y="198">junior floor 30%</text>
+        <text class="dg-s" x="264" y="213">holds no cooldowns</text>
+
+        <path class="dg-edge-jr" d="M440 162 L520 85" marker-end="url(#aj)"></path>
+        <text class="dg-lb" x="452" y="112">junior leg</text>
+        <path class="dg-edge-sr" d="M440 198 L520 275" marker-end="url(#at)"></path>
+        <text class="dg-lb" x="452" y="252">senior leg</text>
+
+        <rect class="dg-jr" x="520" y="54" width="190" height="62" rx="3"></rect>
+        <text class="dg-t" x="534" y="78">SparkUSDCStrategy</text>
+        <text class="dg-s" x="534" y="95">liquid · instant redeem</text>
+        <line class="dg-edge-ext" x1="710" y1="85" x2="760" y2="85" marker-end="url(#ax)"></line>
+        <rect class="dg-ext" x="760" y="54" width="160" height="62" rx="3"></rect>
+        <text class="dg-t" x="774" y="82">Spark USDC</text>
+        <text class="dg-s" x="774" y="98">vault</text>
+
+        <rect class="dg-sr" x="520" y="244" width="190" height="62" rx="3"></rect>
+        <text class="dg-t" x="534" y="268">MidasStrategy</text>
+        <text class="dg-s" x="534" y="285">illiquid · queued redeem</text>
+        <line class="dg-edge-ext" x1="710" y1="275" x2="760" y2="275" marker-end="url(#ax)"></line>
+        <rect class="dg-ext" x="760" y="244" width="160" height="62" rx="3"></rect>
+        <text class="dg-t" x="774" y="272">mHYPER</text>
+        <text class="dg-s" x="774" y="288">Midas vaults</text>
+
+        <line class="dg-edge-soft" x1="595" y1="116" x2="595" y2="158" marker-start="url(#as)" marker-end="url(#as)"></line>
+        <line class="dg-edge-soft" x1="595" y1="202" x2="595" y2="244" marker-start="url(#as)" marker-end="url(#as)"></line>
+        <rect class="dg-dash" x="526" y="158" width="178" height="44" rx="3"></rect>
+        <text class="dg-t" x="540" y="178">Rebalancer</text>
+        <text class="dg-s" x="540" y="193">skips cooldowns</text>
+
+        <text class="dg-glb" x="58" y="256">ROUTING BY TRANCHE</text>
+        <text class="dg-s" x="58" y="274">deposit → the tranche's own leg</text>
+        <text class="dg-s" x="58" y="290">withdraw → the other leg first</text>
+        <text class="dg-s" x="58" y="306">legs read isJrt() via the parent</text>
+
+        <rect class="dg-coolgroup" x="250" y="344" width="670" height="80" rx="4"></rect>
+        <text class="dg-cglb" x="262" y="362">COOLDOWNS ON WITHDRAWAL</text>
+        <rect class="dg-cool" x="262" y="370" width="205" height="42" rx="3"></rect>
+        <text class="dg-t" x="274" y="388">SharesCooldown</text>
+        <text class="dg-s" x="274" y="403">jrt 7d / 3d · srt 0 lock</text>
+        <rect class="dg-cool" x="479" y="370" width="205" height="42" rx="3"></rect>
+        <text class="dg-t" x="491" y="388">ERC20Cooldown</text>
+        <text class="dg-s" x="491" y="403">shared by both legs</text>
+        <rect class="dg-cool" x="696" y="370" width="210" height="42" rx="3"></rect>
+        <text class="dg-t" x="708" y="388">UnstakeCooldown</text>
+        <text class="dg-s" x="708" y="403">Midas leg only</text>
+
+        <path class="dg-edge-cool" d="M40 210 L40 391 L262 391" marker-end="url(#ac)"></path>
+        <text class="dg-clb" x="48" y="232">shares</text>
+        <path class="dg-edge-cool" d="M520 85 L500 85 L500 370" marker-end="url(#ac)"></path>
+        <line class="dg-edge-cool" x1="600" y1="306" x2="600" y2="370" marker-end="url(#ac)"></line>
+        <text class="dg-clb" x="506" y="338">tokens</text>
+        <path class="dg-edge-cool" d="M690 306 L790 370" marker-end="url(#ac)"></path>
+        <text class="dg-clb" x="716" y="338">unstake</text>
+      </svg>
+    </div>
+    <figcaption><b>The shape none of the live markets has.</b> The three cooldown contracts are deployed once and shared, but they attach below the parent: <code>SharesCooldown</code> to the CDO as usual, <code>ERC20Cooldown</code> to both legs, and <code>UnstakeCooldown</code> to the Midas leg only — <code>SparkUSDCStrategy.initialize()</code> takes no unstake address because Spark redeems instantly. The parent itself holds none: <code>MultiStrategy_init()</code> takes only owner, ACM, CDO and the allocation floor, and routes each withdrawal to a leg, which then applies its own rail.</figcaption>
+  </figure>
+
+  <div class="legend">
+    <h3>What the tranches change in this setup</h3>
+    <dl>
+      <dt>Deployment</dt><dd>Identical — <code>ensureTranches()</code> is not overridden, both tranches are USDC-denominated ERC-4626 vaults initialized against the CDO, and the CDO is still bound by one <code>configure(accounting, strategy, jrt, srt)</code>. Only the naming differs: this is the one market whose two tranches are named after <b>different</b> assets (<code>jrIsoSpk</code> / <code>srIsoMHYPER</code>), one per leg.</dd>
+      <dt>Ordering</dt><dd><code>MultiStrategy_init()</code> requires <code>cdo.accounting() == address(0)</code>, so the parent must be initialized <b>before</b> <code>cdo.configure()</code> binds the tranches. The standard deploy order already satisfies this, but it is the only market where that sequence is enforced on-chain.</dd>
+      <dt>Tranche identity</dt><dd>Sub-strategies are initialized with the <b>IsolatedStrategy</b> as their CDO, so when a leg calls <code>cdo.isJrt(tranche)</code> to pick its cooldown period it hits the parent, which forwards to the real CDO. Tranche identity therefore travels two hops instead of one.</dd>
+      <dt>Per-leg controls</dt><dd><code>perStrategyTokens</code> carries four pause flags per leg and token — <code>jrtDeposits</code>, <code>srtDeposits</code>, <code>jrtWithdrawals</code>, <code>srtWithdrawals</code>. A tranche can be halted on one leg while still trading on the other, which no single-strategy market can express.</dd>
+    </dl>
+  </div>
+
+</section>
+
+<!-- ══════════════════ COMPARISON ══════════════════ -->
+<section>
+  <div class="sec-head">
+    <p class="eyebrow">side by side</p>
+    <h2>Cooldown coverage across the seven</h2>
+  </div>
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr><th>Market</th><th>External position</th><th>Shares<br>on CDO</th><th>ERC20<br>on strategy</th><th>Unstake<br>on strategy</th><th>Request impl</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="mono">ethena</td><td>sUSDe</td><td class="no">— none deployed</td><td class="yes">yes</td><td class="yes">yes</td><td class="mono">SUSDeCooldownRequestImpl</td></tr>
+        <tr><td class="mono">neutrl</td><td>sNUSD</td><td class="yes">yes</td><td class="yes">yes</td><td class="yes">yes</td><td class="mono">SNUSDCooldownRequestImpl</td></tr>
+        <tr><td class="mono">saturn</td><td>sUSDat</td><td class="yes">yes</td><td class="yes">yes</td><td class="yes">yes</td><td class="mono">SaturnCooldownRequestImpl</td></tr>
+        <tr><td class="mono">figure</td><td>wYLDS → PRIME</td><td class="yes">yes</td><td class="yes">yes</td><td class="yes">yes</td><td class="mono">FigureCooldownRequestImpl</td></tr>
+        <tr><td class="mono">mhyper</td><td>mHYPER</td><td class="yes">yes</td><td class="yes">yes</td><td class="yes">yes</td><td class="mono">MidasCooldownRequestImpl</td></tr>
+        <tr><td class="mono">mm1usd</td><td>mM1-USD</td><td class="yes">yes</td><td class="yes">yes</td><td class="yes">yes</td><td class="mono">MidasCooldownRequestImpl</td></tr>
+        <tr><td class="mono">nestopal</td><td>nOPAL</td><td class="yes">yes</td><td class="yes">yes</td><td class="no">deployed, inert</td><td class="no">none registered</td></tr>
+        <tr><td class="mono">spkMhyperIso<br><span class="addr">not deployed</span></td><td>Spark USDC + mHYPER</td><td class="yes">yes</td><td class="yes">both legs</td><td class="yes">Midas leg only</td><td class="mono">MidasCooldownRequestImpl</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Five markets run all three rails. Ethena has no share-level cooldown at all; nestopal has an <code>UnstakeCooldown</code> proxy with no request implementation and a strategy that never receives its address, so only two rails can fire. The unlaunched isolated market is the only one where a rail is wired to some but not all of the strategy code behind a single CDO.</p>
+</section>
+
+<footer>
+  <p>Drawn from <code>contracts/tranches/strategies/*</code>, <code>src/deployments/*.ts</code> and <code>deployments/*/deployments-eth.json</code> at commit 5f77ad4.</p>
+  <p><b>Topology check:</b> every live strategy declares <code>contract X is Strategy</code>. The full contract inventory across all deployment files on all networks holds 8 <code>StrataCDO</code>, 8 strategies, 16 <code>Tranche</code>, 8 accounting contracts, 8 <code>ERC20Cooldown</code>, 8 <code>UnstakeCooldown</code> and 6 <code>SharesCooldown</code> — one strategy per CDO, with no <code>IsolatedStrategy</code>, <code>MultiStrategy</code>, <code>SparkUSDCStrategy</code> or <code>Rebalancer</code> recorded anywhere.</p>
+</footer>
+
+</div>
