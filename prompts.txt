@@ -1,0 +1,100 @@
+Here are the prompts. I've staged them the way the work actually went — a single mega-prompt tends to produce plausible-but-unverified diagrams, and the value of this artifact was that every fact was checked against the repo.
+
+Run from the repo root (under contracts/) at commitHash 5f77ad
+
+---
+
+**Prompt 1 — Establish ground truth**
+
+This repo is the Strata tranches protocol. Read deployments/*/deployments-eth.json and
+src/platforms/Tranches.ts (plus src/platforms/strats/*.ts) and build me a per-market
+inventory of everything deployed to Ethereum mainnet.
+
+For each market I want: base asset, StrataCDO address, which accounting contract
+(Accounting / DiscreteAccounting / DYSAccounting), the strategy contract, the APR pair
+provider, the tranche symbols, and which cooldown contracts exist.
+
+Ignore the .layout.json files. Treat the deployment records as authoritative over the
+TypeScript config where they disagree, and tell me if they do.
+
+**Prompt 2 — Verify topology (do not skip)**
+
+For every deployed market, check whether the strategy is single or multi-strategy.
+Grep the actual Solidity contract declarations — I want to see whether each reads
+"contract X is Strategy" or "is MultiStrategy".
+
+Then tell me where MultiStrategy and IsolatedStrategy are actually used, and whether
+any of those markets have a deployment folder.
+
+Cross-check your answer: count StrataCDO vs strategy contracts across every deployment
+file on every network. A multi-strategy market would break a 1:1 ratio.
+
+**Prompt 3 — Cooldown wiring**
+
+There are three cooldown contracts: SharesCooldown, ERC20Cooldown, UnstakeCooldown.
+
+For each market work out which are deployed, and — separately — which are actually
+wired and functional. Specifically check:
+  - which is attached to the CDO vs to the strategy (read the initialize() signatures
+    and cdo.setSharesCooldown)
+  - whether a CooldownRequestImpl is registered per token (ensureUnstakeImplemenetations)
+  - whether the strategy's initialize() even receives the unstake cooldown address
+
+I expect at least one market where a cooldown is deployed but inert. Flag those
+explicitly rather than counting them as present.
+
+**Prompt 4 — Build the artifact**
+
+Build me an HTML artifact: one simple, high-level architecture diagram per deployed
+market. Load the artifact-design and artifact-diagramming skills first.
+
+Keep every diagram to the SAME shape so markets are comparable:
+
+  [Tranches group: jrXXX / srXXX] --> [StrataCDO] --> [Strategy] --> [External protocol]
+                                          |
+                                     [Accounting] <-- [AprPairFeed] <-- [Provider]
+
+Plus a dashed "COOLDOWNS ON WITHDRAWAL" cluster below, with three slots always in the
+same position (Shares / ERC20 / Unstake), fed by two arrows: "shares" from the CDO and
+"tokens" from the strategy. Where a rail is missing or inert, draw the slot as a dashed
+greyed box saying why — the gaps should be visible at a glance.
+
+Rules:
+- Hand-authored inline SVG, no libraries. Junior = amber, Senior = teal, consistently.
+- Where a strategy reaches its position through two hops (a wrapper vault, or a
+  deposit/redemption vault pair), stack two external boxes instead of one.
+- Where a market has a deposit-side adapter, show it as a dashed box.
+- High-level only: no NAV gating, no per-token exit routing, no reconciliation detail.
+- One-line caption per figure stating what's distinctive about that market.
+- End with a comparison table: market, protocol wrapped, strategy contract, cooldown
+  coverage per rail.
+
+Prompt 5 — The contrast figure
+
+Add a final figure for the multi-strategy market that exists in the deployment scripts
+but was never deployed, clearly labelled as not deployed.
+
+Show: tranche pair -> CDO -> IsolatedStrategy -> two sub-strategy legs -> their external
+venues, with the Rebalancer between the legs, and the same cooldown cluster.
+
+Verify before drawing:
+  - which leg is junior and which is senior (configureStrategies)
+  - which cooldowns each leg receives in its initialize()
+  - the per-tranche deposit and withdraw ordering (the packed order immutables)
+  - whether the parent holds any cooldown references at all
+
+Also add a short panel on what the tranches change in this setup vs a single-strategy
+market — deployment differences, ordering constraints enforced on-chain, how a
+sub-strategy resolves isJrt, and any per-leg/per-tranche controls.
+
+---
+
+What to expect
+
+Prompts 1–3 are the load-bearing ones. Without them prompt 4 produces diagrams that look right and get the cooldown gaps and the Nest deposit path wrong.
+
+The findings those checks should surface: every deployed strategy extends the single Strategy base; SparkUSDCStrategy/IsolatedStrategy appear in no deployment file; one market has no SharesCooldown at all; another has an UnstakeCooldown deployed with no request implementation and a strategy that never receives its address. If a fresh session reports something different, one of you is wrong and it's worth resolving before drawing.
+
+Reproduction won't be byte-identical — palette, typography and layout come out of artifact-design and will vary. The information architecture will match.
+
+Two things the prompts deliberately don't hard-code: the market names and the specific gaps. Feeding those in produces confident-sounding diagrams that were never actually verified, which defeats the point.
