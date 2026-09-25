@@ -75,3 +75,9 @@ repository. Not an audit report, and it contains no security findings.
 
 The eight diagrams are also available as standalone SVG files under [`svg/`](svg/) — self-contained,
 not referenced by the page, provided for editing or embedding in reports. See [`svg/README.md`](svg/README.md).
+
+## Regenerating
+
+These diagrams were produced by Claude Code reading the protocol repository. [`PROMPTS.md`](PROMPTS.md)
+has the prompts, the commit to run them against, the model and effort settings, and the
+verification checkpoints a correct run should surface.
